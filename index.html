@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Binaries, Libraries, Linux Boot & Embedded Systems — Final Presentation</title>
+  <meta name="description" content="A concise, presentation-ready explainer on binaries, libraries, the Linux boot process, and embedded systems. Prepared by Aditya GS & Sai Sneha." />
+  <style>
+    :root{
+      --bg: #0b1220;
+      --panel: #111a2e;
+      --text: #e6edf7;
+      --muted: #9fb0cf;
+      --accent: #6aa8ff;
+      --accent-2:#7ef7c2;
+      --border:#1f2a44;
+      --code-bg:#0e1730;
+      --ok:#1fb980;
+      --warn:#ffb020;
+      --danger:#ff6a6a;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text); font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:28px 20px 64px}
+    header{
+      position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(8px);
+      background:linear-gradient(180deg, rgba(11,18,32,.95) 0%, rgba(11,18,32,.6) 100%);
+      border-bottom:1px solid var(--border);
+    }
+    .nav{display:flex; gap:14px; align-items:center; justify-content:space-between; padding:10px 20px}
+    .brand{display:flex; gap:10px; align-items:center}
+    .dot{width:10px; height:10px; border-radius:50%; background:var(--accent)}
+    .brand h1{font-size:16px; margin:0; letter-spacing:.3px}
+    .links{display:flex; flex-wrap:wrap; gap:10px}
+    .links a{
+      color:var(--text); text-decoration:none; padding:6px 10px; border:1px solid var(--border);
+      border-radius:999px; background:rgba(255,255,255,.02);
+    }
+    .links a:hover{border-color:var(--accent); color:var(--accent)}
+
+    .hero{display:grid; grid-template-columns: 1.3fr .7fr; gap:28px; align-items:center; padding:34px 20px}
+    .hero .title{font-size:32px; line-height:1.2; margin:0 0 6px}
+    .hero .subtitle{color:var(--muted); margin:0 0 14px}
+    .pill{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); border-radius:999px; padding:6px 12px; color:var(--muted)}
+    .badge{display:inline-block; padding:2px 8px; border-radius:6px; background:rgba(122, 199, 255,.15); color:var(--accent); font-size:12px}
+
+    .card{border:1px solid var(--border); background:var(--panel); border-radius:16px; padding:18px}
+    .grid{display:grid; gap:18px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+
+    h2{font-size:26px; margin:24px 0 12px}
+    h3{font-size:20px; margin:18px 0 8px}
+    p{margin:8px 0}
+    ol,ul{padding-left:20px}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background:var(--code-bg); color:#d6e7ff; padding:.2em .4em; border-radius:6px; border:1px solid var(--border)}
+    pre{background:var(--code-bg); border:1px solid var(--border); border-radius:12px; padding:14px; overflow:auto}
+
+    .kpi{display:flex; gap:12px; flex-wrap:wrap}
+    .kpi .chip{border:1px solid var(--border); padding:8px 10px; border-radius:10px; color:var(--muted)}
+    .foot{margin-top:40px; color:var(--muted); font-size:14px}
+    .toc a{color:var(--accent); text-decoration:none}
+    .toc a:hover{text-decoration:underline}
+
+    .callout{border-left:4px solid var(--accent-2); padding:10px 12px; background:rgba(126,247,194,.05); border-radius:8px}
+    .hr{height:1px; border:0; background:linear-gradient(90deg, transparent, var(--border), transparent); margin:28px 0}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand"><span class="dot"></span><h1>Systems & Embedded Concepts</h1></div>
+      <nav class="links">
+        #introIntro</a>
+        #binaries-librariesBinaries & Libraries</a>
+        #linux-bootLinux Boot</a>
+        #embeddedEmbedded Systems</a>
+        #resourcesResources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="intro" class="hero card">
+      <div>
+        <span class="badge">Final Presentation</span>
+        <h2 class="title">Binaries, Libraries, Linux Boot Process & Embedded Systems</h2>
+        <p class="subtitle">Prepared by <strong>Aditya GS</strong> & <strong>Sai Sneha</strong></p>
+        <div class="kpi">
+          <span class="chip">Audience: CS/EE undergrads & practitioners</span>
+          <span class="chip">Goal: Conceptual clarity + mental models</span>
+          <span class="chip">Time: ~15–20 minutes</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">At a glance</h3>
+        <ul>
+          <li>What an executable <em>binary</em> is and how it’s produced</li>
+          <li>How <em>libraries</em> (static & shared) enable reuse</li>
+          <li>The Linux path: <code>power → firmware → bootloader → kernel → user space → desktop</code></li>
+          <li>What makes an <em>embedded system</em> different from a PC</li>
+        </ul>
+        <div class="callout"><strong>Tip:</strong> Use this as a talk track. Each section is self-contained and copy‑friendly for slides.</div>
+      </div>
+    </section>
+
+    <section id="binaries-libraries" class="card">
+      <h2>1 & 2. Binaries and Libraries — The Building Blocks</h2>
+      <p>A <strong>binary</strong> is a file of machine instructions the CPU can execute. It is produced by compiling source code and linking object files and libraries into an executable format (e.g., ELF on Linux).</p>
+
+      <h3>From Source to Binary</h3>
+      <pre><code>Source (.c/.cpp/.rs)
+   │  compile
+   ▼
+Object Files (.o)
+   │  link (+ startup + symbols)
+   ▼
+Executable (ELF/EXE) → entry point → OS loads → CPU runs
+      </code></pre>
+
+      <h3>What is a Library?</h3>
+      <p>A <strong>library</strong> is precompiled code that programs reuse. Two main kinds on Linux:</p>
+      <ul>
+        <li><strong>Static</strong> <code>.a</code> — code is copied into the executable at link time (larger binary, self‑contained).</li>
+        <li><strong>Shared</strong> <code>.so</code> — loaded by the dynamic linker at program start (smaller app, shared in RAM, versioned).</li>
+      </ul>
+
+      <h3>How Binaries & Libraries Work Together</h3>
+      <pre><code>Object Files (.o) & Static Libs (.a) --(link)--> Final Binary
+Final Binary --(runtime)--> Dynamic Linker loads Shared Libs (.so)
+      </code></pre>
+      <p class="callout">Why it matters: impacts startup time, memory usage, portability, and security updates.</p>
+    </section>
+
+    <section id="linux-boot" class="card">
+      <h2>3. Linux Boot: Power-On to Desktop</h2>
+      <ol>
+        <li><strong>Power on</strong> → CPU reset vector jumps into firmware.</li>
+        <li><strong>BIOS/UEFI</strong> initializes hardware, performs POST, and locates a bootable device.</li>
+        <li><strong>Bootloader (GRUB)</strong> presents a menu, loads the Linux <em>kernel</em> and <em>initramfs</em>, passes boot params.</li>
+        <li><strong>Kernel</strong> decompresses, initializes drivers, mounts temporary root (initramfs), finds real root FS, starts PID 1.</li>
+        <li><strong>systemd</strong> (PID 1) mounts filesystems, starts services (udev, network, logs), and launches a display manager.</li>
+        <li><strong>Display server & Desktop</strong> → Login via GDM/SDDM/LightDM; Wayland/Xorg session starts GNOME/KDE/XFCE.</li>
+      </ol>
+      <pre><code>Power → Firmware → Bootloader → Kernel+initramfs → systemd → Display Manager → Desktop
+      </code></pre>
+    </section>
+
+    <section id="embedded" class="card">
+      <h2>4. Embedded Systems — Purpose‑Built Computing</h2>
+      <p>An <strong>embedded system</strong> combines hardware + firmware (and often an RTOS or embedded Linux) to perform a dedicated function under power, cost, and timing constraints.</p>
+
+      <div class="grid cols-2">
+        <div>
+          <h3>Typical Stack</h3>
+          <pre><code>Application / Control Logic
+RTOS or Embedded Linux
+Drivers (GPIO, SPI, I2C, UART)
+MCU/MPU + RAM/Flash + Peripherals
+          </code></pre>
+          <h3>Common Types</h3>
+          <ul>
+            <li>Standalone controllers (appliances)</li>
+            <li>Real‑time systems (ABS, pacemakers)</li>
+            <li>Networked/IoT devices (routers, wearables)</li>
+            <li>Embedded Linux devices (TVs, gateways)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Key Traits</h3>
+          <ul>
+            <li>Deterministic timing (often)</li>
+            <li>Small memory & storage footprint</li>
+            <li>Optimized boot & power usage</li>
+            <li>High reliability, long life cycles</li>
+          </ul>
+          <div class="callout">Contrast with PCs: general‑purpose, larger RAM/CPU, rich GUIs, frequent updates.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="card">
+      <h2>Appendix: Quick Reference & Speaker Notes</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>Key Terms</h3>
+          <ul>
+            <li><strong>ELF</strong>: Executable and Linkable Format (Linux binaries)</li>
+            <li><strong>initramfs</strong>: temporary root FS used during early boot</li>
+            <li><strong>PID 1</strong>: first user‑space process (systemd)</li>
+            <li><strong>MCC</strong>: Merchant Category Code (not relevant here but often asked in payments)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Demo Ideas</h3>
+          <ul>
+            <li>Run <code>ldd /bin/ls</code> to show shared libs loaded by a binary</li>
+            <li>Show GRUB menu & kernel parameters</li>
+            <li>Use <code>dmesg</code> to skim kernel init logs</li>
+            <li>On a microcontroller, blink LED (bare‑metal vs RTOS)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <p class="foot">© <span id="year"></span> Aditya GS &amp; Sai Sneha — Built for GitHub Pages. Theme: custom dark.</p>
+    </section>
+  </main>
+
+  <script>
+    // set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
