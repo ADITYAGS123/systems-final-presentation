@@ -1,107 +1,164 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Operating Systems & Embedded Systems</title>
-
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --text: #e2e8f0;
-      --accent: #38bdf8;
-      --highlight: #22c55e;
-      --warning: #f59e0b;
+      --bg: #0f172a;           /* Deep Navy */
+      --card-bg: #1e293b;      /* Slate Blue */
+      --card-border: #334155;
+      --text-main: #f8fafc;    /* Off-white */
+      --text-muted: #94a3b8;   /* Soft Grey */
+      --accent: #38bdf8;       /* Electric Blue */
+      --highlight: #10b981;    /* Emerald Green */
+      --warning: #f59e0b;      /* Amber */
+      --code-bg: #020617;      /* Deep Black */
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 40px 20px;
     }
 
-    h1, h2, h3, h4 {
-      color: var(--accent);
-      margin-top: 0.5em;
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
     }
 
     h1 {
+      font-size: 2.5rem;
       text-align: center;
-      padding: 20px;
+      color: var(--accent);
+      margin-bottom: 40px;
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      color: var(--accent);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      color: var(--highlight);
+      margin-top: 25px;
     }
 
     section.card {
-      background: var(--card);
-      padding: 20px;
-      margin: 20px auto;
-      border-radius: 12px;
-      max-width: 900px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
-      transition: transform 0.2s ease;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 30px;
+      margin-bottom: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
     }
 
     section.card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
     }
 
+    /* Code Blocks */
     pre {
-      background: #020617;
-      padding: 15px;
-      border-radius: 10px;
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 12px;
       overflow-x: auto;
-      color: #38bdf8;
+      border: 1px solid var(--card-border);
     }
 
     code {
-      color: var(--highlight);
-      font-weight: bold;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      color: var(--accent);
+      font-size: 0.95rem;
     }
 
+    /* Lists */
     ul, ol {
       padding-left: 20px;
     }
 
     li {
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
+    strong {
+      color: var(--accent);
+    }
+
+    /* Grids */
     .grid {
       display: grid;
-      gap: 20px;
+      gap: 24px;
+      margin-top: 20px;
     }
 
     .cols-2 {
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
 
+    /* Specialized Callouts */
     .callout {
-      background: #020617;
-      border-left: 5px solid var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+    }
+
+    .exam-tip {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px dashed var(--highlight);
       padding: 15px;
       border-radius: 8px;
-      margin-top: 15px;
+      font-style: italic;
     }
 
-    .callout strong {
+    .exam-tip b {
       color: var(--highlight);
     }
 
-    html {
-      scroll-behavior: smooth;
+    /* Comparison Styling */
+    .comparison-box {
+      background: rgba(2, 6, 23, 0.5);
+      padding: 15px;
+      border-radius: 10px;
     }
 
-    h2 {
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 5px;
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--card-border);
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
     }
   </style>
-
 </head>
-
 <body>
 
+<div class="container">
   <h1>🚀 Operating Systems & Embedded Systems</h1>
 
   
@@ -187,7 +244,6 @@ Services + Desktop
       </ul>
     </li>
     
-
     <li>
       <strong>Init Process (systemd)</strong><br/>
       First user-space process (PID 1).
