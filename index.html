@@ -1,5 +1,5 @@
 <section id="linux-boot" class="card">
-  <h2>3. Linux Boot: Power-On to Desktop</h2>
+  <h2>1. Linux Boot: Power-On to Desktop</h2>
 
   <h3>Basic Flow</h3>
   <pre><code>Power On
@@ -10,7 +10,7 @@ POST (Hardware Check)
    ↓
 Boot Device Selection
    ↓
-Bootloader (GRUB2 / LILO)
+Bootloader (GRUB2 )
    ↓
 Kernel
    ↓
@@ -68,17 +68,18 @@ Services + Desktop
         <li><strong>LILO</strong>: Older, mostly obsolete</li>
       </ul>
     </li>
-
     <li>
       <strong>Kernel</strong><br/>
       After GRUB loads it:
       <ul>
         <li>Decompresses itself into memory</li>
+        <li>Loads <code>initramfs</code> (temporary root filesystem)</li>
         <li>Initializes hardware</li>
         <li>Loads device drivers & kernel modules</li>
-        <li>Starts background processes</li>
+        <li>Starts the init process (systemd (PID 1)) which then starts background processes and everything else</li>
       </ul>
     </li>
+    
 
     <li>
       <strong>Init Process (systemd)</strong><br/>
@@ -144,5 +145,300 @@ Services + Desktop
   <p>
     Always write this order:<br/>
     <code>Power → BIOS/UEFI → POST → Bootloader → Kernel → systemd → Services → Desktop</code>
+  </p>
+</section>
+<section id="program-execution" class="card">
+  <h2>2. Program Execution Process (C/C++)</h2>
+
+  <h3>Basic Flow</h3>
+  <pre><code>Source Code
+   ↓
+Compiler (Generates Assembly Code)
+   ↓
+Assembler (Generates Machine Code)
+   ↓
+Linker (Links Libraries)
+   ↓
+Loader (Loads into Memory)
+   ↓
+Execution
+  </code></pre>
+
+  <h3>Step-by-Step Explanation</h3>
+  <ol>
+    <li>
+      <strong>Source Code</strong><br/>
+      A program written in a high-level language like C/C++ that instructs the CPU to perform tasks.
+    </li>
+
+    <li>
+      <strong>Compiler</strong><br/>
+      Translates high-level code into assembly language.
+      <ul>
+        <li>Checks syntax and semantic errors</li>
+        <li>Performs lexical analysis and syntax checking</li>
+        <li>Ensures program follows language rules</li>
+      </ul>
+    </li>
+
+    <li>
+      <strong>Assembler</strong><br/>
+      Converts assembly code into machine (binary) code.
+      <ul>
+        <li>Output is an <code>object file (.o)</code></li>
+        <li>Assigns memory locations to instructions</li>
+        <li>Uses physical or virtual addressing</li>
+      </ul>
+    </li>
+
+    <li>
+      <strong>Linker</strong><br/>
+      Combines object files and libraries to create final executable.
+      <ul>
+        <li>Links system libraries and external modules</li>
+        <li>Resolves references (functions, variables)</li>
+        <li>Assigns final memory addresses</li>
+      </ul>
+    </li>
+
+    <li>
+      <strong>Loader</strong><br/>
+      Loads executable into memory.
+      <ul>
+        <li>Allocates memory (code, data, stack, heap)</li>
+        <li>Initializes registers</li>
+        <li>Sets program counter to entry point</li>
+        <li>Starts program execution</li>
+      </ul>
+    </li>
+    
+    <li>
+      <strong>Execution</strong><br/>
+      CPU starts executing instructions and produces output.
+    </li>
+  </ol>
+
+  <h3>Detailed Execution Flow</h3>
+  <pre><code>Write Code → Edit Source Program
+        ↓
+     Compile
+        ↓
+   Syntax Errors? ── Yes → Fix Code
+        ↓ No
+   Object Code Generated
+        ↓
+ Link with System Libraries
+        ↓
+ Execute Object Code
+        ↓
+ Logic/Data Errors? ── Yes → Debug
+        ↓ No
+   Correct Output → STOP
+  </code></pre>
+
+  <h3>Key Concepts</h3>
+  <ul>
+    <li><strong>Object File:</strong> Binary representation of program after assembly</li>
+    <li><strong>Libraries:</strong> Pre-written code reused during linking</li>
+    <li><strong>Errors:</strong> 
+      <ul>
+        <li>Syntax Errors → during compilation</li>
+        <li>Logic Errors → during execution</li>
+        <li>Data Errors → incorrect input/output</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="callout">
+    <strong>Key Insight:</strong><br/>
+    Compilation converts code → Linking prepares it → Loading runs it.
+  </div>
+
+  <h3>Exam Tip</h3>
+  <p>
+    Write in order:<br/>
+    <code>Source → Compiler → Assembler → Linker → Loader → Execution</code>
+  </p>
+</section>
+<section id="embedded" class="card">
+  <h2>3. Embedded Systems — Purpose-Built Computing</h2>
+
+  <h3>What is an Embedded System?</h3>
+  <p>
+    An <strong>embedded system</strong> is a combination of hardware and software designed to perform a 
+    <strong>specific function</strong> within a larger system. Unlike general-purpose computers, it is 
+    optimized for performance, power, and cost.
+  </p>
+
+  <h3>Basic Structure</h3>
+  <pre><code>Input Devices (Sensors)
+        ↓
+Microcontroller / Processor
+        ↓
+Memory (RAM / ROM / Flash)
+        ↓
+Output Devices (Actuators / Display)
+  </code></pre>
+  <h3>Explanation of Components</h3>
+
+    <h4>1. Input Devices (Sensors)</h4>
+    <p>
+      Sensors are used to collect data from the environment and provide it to the system.
+      They convert physical signals into electrical signals.
+    </p>
+    <ul>
+      <li>Examples: Temperature sensor, pressure sensor, light sensor</li>
+      <li>They act as the <strong>input layer</strong> of the system</li>
+    </ul>
+
+    <h4>2. Microcontroller / Processor</h4>
+    <p>
+      This is the <strong>brain of the embedded system</strong>. It processes input data,
+      executes instructions, and controls output devices.
+    </p>
+    <ul>
+      <li>Microcontroller (MCU): Used in small, low-power systems</li>
+      <li>Microprocessor (MPU): Used in more complex systems (e.g., embedded Linux)</li>
+    </ul>
+
+    <h4>3. Memory (RAM / ROM / Flash)</h4>
+    <p>
+      Memory stores both program instructions and data required for execution.
+    </p>
+    <ul>
+      <li><strong>RAM:</strong> Temporary storage during execution</li>
+      <li><strong>ROM:</strong> Permanent storage of firmware</li>
+      <li><strong>Flash:</strong> Reprogrammable non-volatile memory</li>
+    </ul>
+
+    <h4>4. Output Devices (Actuators / Display)</h4>
+    <p>
+      Output devices convert processed data into physical action or visible output.
+    </p>
+    <ul>
+      <li>Examples: Motors, LEDs, displays, buzzers</li>
+      <li>They represent the <strong>output layer</strong> of the system</li>
+    </ul>
+
+  <h3>Typical Software Stack</h3>
+  <pre><code>Application Code
+↓
+RTOS / Embedded Linux (optional)
+↓
+Device Drivers
+↓
+Hardware (MCU / MPU)
+  </code></pre>
+  <h4>5. Application Code</h4>
+    <p>
+      This is the user-defined program that controls the system behavior and logic.
+      It defines how inputs are processed and what outputs should be generated.
+    </p>
+
+    <h4>6. RTOS / Embedded Linux</h4>
+    <p>
+      Provides an environment to manage tasks and system resources.
+    </p>
+    <ul>
+      <li><strong>RTOS:</strong> Ensures real-time execution with strict timing constraints</li>
+      <li><strong>Embedded Linux:</strong> Used in complex systems with multitasking support</li>
+    </ul>
+
+    <h4>7. Device Drivers</h4>
+    <p>
+      Drivers act as an interface between software and hardware components.
+    </p>
+    <ul>
+      <li>Control hardware like sensors, displays, communication modules</li>
+      <li>Allow application code to interact with hardware easily</li>
+    </ul>
+
+    <h4>8. Hardware (MCU / MPU)</h4>
+    <p>
+      The physical components of the system including processor, memory, and peripherals.
+    </p>
+    <ul>
+      <li>Includes GPIO, UART, SPI, I2C interfaces</li>
+      <li>Responsible for actual execution of instructions</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Key Insight:</strong><br/>
+      Embedded systems follow a layered approach — hardware at the bottom,
+      software at the top, and drivers/OS connecting both.
+    </div>
+
+  <div class="grid cols-2">
+    <div>
+      <h3>Key Characteristics</h3>
+      <ul>
+        <li>Dedicated to a specific task</li>
+        <li>Real-time operation (in many cases)</li>
+        <li>Low power consumption</li>
+        <li>Compact and efficient</li>
+        <li>High reliability</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3>Types of Embedded Systems</h3>
+      <ul>
+        <li><strong>Standalone</strong> (e.g., microwave, washing machine)</li>
+        <li><strong>Real-Time</strong> (e.g., airbag system, pacemaker)</li>
+        <li><strong>Networked / IoT</strong> (e.g., smart home devices)</li>
+        <li><strong>Mobile Embedded</strong> (e.g., smartphones)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Examples</h3>
+  <ul>
+    <li>Automotive systems (ABS, engine control)</li>
+    <li>Consumer electronics (TV, camera)</li>
+    <li>Industrial machines</li>
+    <li>Medical devices</li>
+    <li>Routers and IoT devices</li>
+  </ul>
+
+  <h3>Embedded vs General-Purpose Systems</h3>
+  <div class="grid cols-2">
+    <div>
+      <h4>Embedded Systems</h4>
+      <ul>
+        <li>Single dedicated task</li>
+        <li>Limited resources</li>
+        <li>Real-time constraints</li>
+        <li>Optimized for efficiency</li>
+      </ul>
+    </div>
+    <div>
+      <h4>General-Purpose Systems</h4>
+      <ul>
+        <li>Multiple tasks</li>
+        <li>High processing power</li>
+        <li>No strict timing constraints</li>
+        <li>User-driven applications</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Key Components</h3>
+  <ul>
+    <li><strong>Microcontroller (MCU)</strong> – brain of the system</li>
+    <li><strong>Memory</strong> – stores program and data</li>
+    <li><strong>Input/Output Interfaces</strong> – sensors & actuators</li>
+    <li><strong>Communication Interfaces</strong> – UART, SPI, I2C</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Key Insight:</strong><br/>
+    Embedded systems are everywhere — from your phone to your car — quietly performing 
+    dedicated tasks efficiently.
+  </div>
+
+  <h3>Exam Tip</h3>
+  <p>
+    Definition + Characteristics + Examples = Full marks answer.<br/>
+    Keywords: <code>Dedicated</code>, <code>Real-time</code>, <code>Low power</code>, <code>Efficient</code>
   </p>
 </section>
